@@ -1,5 +1,5 @@
 const { randomUUID } = require('node:crypto');
-const { put } = require('@vercel/blob');
+const cache = require('../lib/share-cache');
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'POST') {
@@ -9,7 +9,8 @@ module.exports = async function handler(request, response) {
   }
 
   const image = request.body?.image;
-  if (typeof image !== 'string' || !/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(image) || image.length > 1500000) {
+  const host = request.headers?.host;
+  if (typeof host !== 'string' || !/^[a-z0-9.-]+$/i.test(host) || typeof image !== 'string' || !/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(image) || image.length > 1500000) {
     response.status(400).json({ error: 'Invalid image' });
     return;
   }
@@ -22,13 +23,9 @@ module.exports = async function handler(request, response) {
 
   const id = randomUUID();
   try {
-    await put(`shares/${id}.jpg`, bytes, {
-      access: 'public',
-      contentType: 'image/jpeg',
-      ttlDays: 7,
-    });
+    await cache.set(id, image, { ttl: 7 * 24 * 60 * 60 });
     response.status(201).json({
-      shareUrl: `https://capture-attendance.vercel.app/api/post?id=${id}`,
+      shareUrl: `https://${host}/api/post?id=${id}`,
     });
   } catch (error) {
     console.error('Failed to create LinkedIn preview', error);

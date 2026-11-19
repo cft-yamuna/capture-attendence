@@ -1,4 +1,4 @@
-const { head } = require('@vercel/blob');
+const cache = require('../lib/share-cache');
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'GET') {
@@ -8,15 +8,21 @@ module.exports = async function handler(request, response) {
   }
 
   const id = request.query?.id;
-  if (typeof id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+  const host = request.headers?.host;
+  if (typeof host !== 'string' || !/^[a-z0-9.-]+$/i.test(host) || typeof id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
     response.status(400).end('Invalid preview');
     return;
   }
 
   try {
-    const blob = await head(`shares/${id}.jpg`);
-    const imageUrl = escapeHtml(blob.url);
-    const pageUrl = `https://capture-attendance.vercel.app/api/post?id=${id}`;
+    const image = await cache.get(id);
+    if (!image) {
+      response.status(404).end('Preview unavailable');
+      return;
+    }
+    const origin = `https://${host}`;
+    const imageUrl = `${origin}/api/image?id=${id}`;
+    const pageUrl = `${origin}/api/post?id=${id}`;
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Cache-Control', 'public, max-age=300');
     response.status(200).end(`<!doctype html>
@@ -39,7 +45,3 @@ module.exports = async function handler(request, response) {
     response.status(404).end('Preview unavailable');
   }
 };
-
-function escapeHtml(value) {
-  return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-}
