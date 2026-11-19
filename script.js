@@ -9,6 +9,7 @@ const context = canvas.getContext('2d');
 const video = document.getElementById('camera-video');
 let stream = null;
 let guest = { name: '', company: '' };
+let shareGeneration = 0;
 
 function showStep(name) {
   Object.entries(steps).forEach(([key, element]) => { element.hidden = key !== name; });
@@ -149,6 +150,7 @@ function createImage(photo) {
   canvas.hidden = false;
   document.getElementById('placeholder-frame').hidden = true;
   document.getElementById('preview-caption').textContent = 'Your personalized event image is ready.';
+  prepareLinkedInPreview();
 }
 
 function downloadImage() {
@@ -184,15 +186,12 @@ function socialPreview() {
   return preview.toDataURL('image/jpeg', 0.85);
 }
 
-document.getElementById('share-image').addEventListener('click', async event => {
-  const button = event.currentTarget;
+async function prepareLinkedInPreview() {
+  const generation = ++shareGeneration;
+  const link = document.getElementById('share-image');
   const feedback = document.getElementById('share-feedback');
-  const tab = window.open('', '_blank');
-  if (tab) {
-    tab.document.body.textContent = 'Preparing your LinkedIn preview…';
-    tab.opener = null;
-  }
-  button.disabled = true;
+  link.href = '#';
+  link.setAttribute('aria-disabled', 'true');
   feedback.textContent = 'Preparing your LinkedIn preview…';
   feedback.hidden = false;
   try {
@@ -203,16 +202,20 @@ document.getElementById('share-image').addEventListener('click', async event => 
     });
     if (!response.ok) throw new Error('Preview upload failed');
     const { shareUrl } = await response.json();
-    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
-    if (tab) tab.location.replace(linkedInUrl);
-    else window.location.assign(linkedInUrl);
+    if (generation !== shareGeneration) return;
+    link.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+    link.removeAttribute('aria-disabled');
     feedback.hidden = true;
   } catch {
-    if (tab) tab.close();
-    feedback.textContent = 'The LinkedIn preview could not be prepared. Please try again.';
-  } finally {
-    button.disabled = false;
+    if (generation !== shareGeneration) return;
+    feedback.textContent = 'The LinkedIn preview could not be prepared. Tap LinkedIn to retry.';
   }
+}
+
+document.getElementById('share-image').addEventListener('click', event => {
+  if (event.currentTarget.getAttribute('href') !== '#') return;
+  event.preventDefault();
+  if (!document.getElementById('share-feedback').textContent.startsWith('Preparing')) prepareLinkedInPreview();
 });
 
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
