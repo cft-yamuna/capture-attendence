@@ -9,8 +9,6 @@ const context = canvas.getContext('2d');
 const video = document.getElementById('camera-video');
 let stream = null;
 let guest = { name: '', company: '' };
-let shareFile = null;
-let shareGeneration = 0;
 
 function showStep(name) {
   Object.entries(steps).forEach(([key, element]) => { element.hidden = key !== name; });
@@ -151,15 +149,6 @@ function createImage(photo) {
   canvas.hidden = false;
   document.getElementById('placeholder-frame').hidden = true;
   document.getElementById('preview-caption').textContent = 'Your personalized event image is ready.';
-  const shareButton = document.getElementById('share-image');
-  const generation = ++shareGeneration;
-  shareButton.disabled = true;
-  shareFile = null;
-  canvas.toBlob(blob => {
-    if (!blob || generation !== shareGeneration) return;
-    shareFile = new File([blob], 'the-gathering.png', { type: 'image/png' });
-    shareButton.disabled = false;
-  }, 'image/png');
 }
 
 function downloadImage() {
@@ -171,22 +160,11 @@ function downloadImage() {
 
 document.getElementById('download-image').addEventListener('click', downloadImage);
 
-document.getElementById('share-image').addEventListener('click', async () => {
-  const feedback = document.getElementById('share-feedback');
-  if (!shareFile) return;
-  if (!navigator.canShare?.({ files: [shareFile] })) {
-    feedback.textContent = 'This browser cannot share an image. Download it and add it to a LinkedIn post.';
-    feedback.hidden = false;
-    return;
-  }
-  try {
-    await navigator.share({ files: [shareFile] });
-    feedback.hidden = true;
-  } catch (error) {
-    if (error.name === 'AbortError') return;
-    feedback.textContent = 'The image could not be shared. Download it and add it to a LinkedIn post.';
-    feedback.hidden = false;
-  }
+document.getElementById('share-image').addEventListener('click', () => {
+  const linkedIn = window.open('https://www.linkedin.com/feed/', '_blank');
+  if (linkedIn) linkedIn.opener = null;
+  downloadImage();
+  if (!linkedIn) window.location.assign('https://www.linkedin.com/feed/');
 });
 
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {

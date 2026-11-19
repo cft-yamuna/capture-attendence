@@ -2,8 +2,8 @@
 
 Run `npm start`, then open <http://localhost:3000>.
 
-Guests enter their name, company, and attendance response for this browser visit only. Responses are not sent to a server or saved after a refresh. Attendees can take or upload a photo, then download a personalized PNG. The LinkedIn button shares that PNG as a file through the phone's native share sheet, where the visitor selects LinkedIn. No link or image is uploaded by the site. Browsers without file sharing can use Download image and attach it in LinkedIn.
+Guests enter their name, company, and attendance response for this browser visit only. Responses are not sent to a server or saved after a refresh. Attendees can take or upload a photo, then download a personalized PNG. The LinkedIn button downloads that PNG and opens LinkedIn in a new browser tab. Visitors then tap Post, choose Photo, and select the downloaded image. The site never shares a link or uploads the image.
 
-The site deploys to Vercel as static files. Sharing uses the browser's Web Share API and requires a browser that supports sharing image files.
+The site deploys to Vercel as static files. LinkedIn's website does not accept an image file directly from another site, so attaching the downloaded image is a manual step.
 
 The event title, artwork, and copy are placeholders. Edit `index.html`, `styles.css`, and the canvas drawing in `script.js` to match your event. Camera access requires localhost or HTTPS.
