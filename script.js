@@ -151,40 +151,36 @@ function createImage(photo) {
   document.getElementById('preview-caption').textContent = 'Your personalized event image is ready.';
 }
 
-function imageBlob() {
-  return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-}
-
-document.getElementById('download-image').addEventListener('click', () => {
+function downloadImage() {
   const link = document.createElement('a');
   link.download = `the-gathering-${guest.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
-});
+}
+
+document.getElementById('download-image').addEventListener('click', downloadImage);
+
+function openLinkedInWithDownload() {
+  const url = 'https://www.linkedin.com/feed/?shareActive=true';
+  const tab = window.open(url, '_blank');
+  if (tab) tab.opener = null;
+  downloadImage();
+  if (!tab) window.location.assign(url);
+}
 
 document.getElementById('share-image').addEventListener('click', async () => {
-  const feedback = document.getElementById('share-feedback');
-  feedback.hidden = true;
-  const blob = await imageBlob();
-  if (!blob) return;
-  const file = new File([blob], 'the-gathering.png', { type: 'image/png' });
-  try {
-    if (navigator.canShare?.({ files: [file] })) {
+  const png = canvas.toDataURL('image/png').split(',')[1];
+  const bytes = Uint8Array.from(atob(png), character => character.charCodeAt(0));
+  const file = new File([bytes], 'the-gathering.png', { type: 'image/png' });
+  if (navigator.share && navigator.canShare?.({ files: [file] })) {
+    try {
       await navigator.share({ files: [file], title: 'The Gathering' });
-    } else if (navigator.clipboard?.write && window.ClipboardItem) {
-      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-      feedback.textContent = 'Image copied. Paste it wherever you’d like to share it.';
-      feedback.hidden = false;
-    } else {
-      feedback.textContent = 'Sharing is unavailable in this browser. Download the image to share it.';
-      feedback.hidden = false;
-    }
-  } catch (error) {
-    if (error.name !== 'AbortError') {
-      feedback.textContent = 'Sharing did not work. Download the image to share it.';
-      feedback.hidden = false;
+      return;
+    } catch (error) {
+      if (error.name === 'AbortError') return;
     }
   }
+  openLinkedInWithDownload();
 });
 
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
