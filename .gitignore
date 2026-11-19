@@ -2,3 +2,5 @@ rsvps.json
 rsvps.jsonl
 preview-*.png
 share-*.png
+node_modules/
+.vercel/
