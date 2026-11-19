@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f4ee" />
+    <title>The Gathering — RSVP & share</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="The Gathering home"><span class="brand-mark">✳</span> THE GATHERING</a>
+        <span class="header-note">An event worth showing up for.</span>
+      </header>
+
+      <main class="main-grid">
+        <section class="content-column">
+          <div class="step-line" aria-label="Progress"><span id="step-count">01</span><span class="step-rule"></span><span>03</span></div>
+
+          <section id="rsvp-step" class="step" aria-labelledby="rsvp-title">
+            <p class="kicker">YOUR INVITATION</p>
+            <h1 id="rsvp-title">Make it<br /><em>official.</em></h1>
+            <p class="intro">Tell us who’s coming. If you’re joining us, we’ll make a shareable keepsake with your photo.</p>
+            <form id="rsvp-form">
+              <div class="field-row">
+                <label class="field"><span>Your name</span><input id="guest-name" name="name" type="text" autocomplete="name" maxlength="48" placeholder="e.g. Alex Morgan" required /></label>
+                <label class="field"><span>Company</span><input id="guest-company" name="company" type="text" autocomplete="organization" maxlength="48" placeholder="e.g. Studio North" required /></label>
+              </div>
+              <fieldset class="attendance-field">
+                <legend>Will you be attending?</legend>
+                <label class="choice"><input type="radio" name="attendance" value="yes" required /><span class="choice-indicator"></span><span>Yes, I’ll be there</span><span class="choice-arrow">↗</span></label>
+                <label class="choice"><input type="radio" name="attendance" value="no" /><span class="choice-indicator"></span><span>Sorry, I can’t make it</span><span class="choice-arrow">↗</span></label>
+              </fieldset>
+              <button class="primary-button" type="submit">Continue <span aria-hidden="true">→</span></button>
+              <p id="rsvp-feedback" class="feedback" role="status" hidden></p>
+            </form>
+          </section>
+
+          <section id="decline-step" class="step" aria-labelledby="decline-title" hidden>
+            <p class="kicker">RSVP RECEIVED</p>
+            <h1 id="decline-title">We’ll miss<br /><em>you.</em></h1>
+            <p class="intro">Thanks for letting us know, <span id="decline-name"></span>. We hope to see you next time.</p>
+            <button class="text-button" type="button" data-action="start-over">← Change your response</button>
+          </section>
+
+          <section id="photo-step" class="step" aria-labelledby="photo-title" hidden>
+            <p class="kicker">STEP TWO — YOUR PHOTO</p>
+            <h1 id="photo-title">Your best<br /><em>side.</em></h1>
+            <p class="intro">Take a selfie or choose a photo from your device. Your image stays in your browser.</p>
+            <div class="camera-box" id="camera-box">
+              <video id="camera-video" autoplay playsinline muted hidden></video>
+              <div id="camera-placeholder" class="camera-placeholder"><span class="camera-symbol" aria-hidden="true">▣</span><span>Camera preview will appear here</span></div>
+            </div>
+            <p id="camera-error" class="feedback" role="status" hidden></p>
+            <div class="photo-actions">
+              <button id="open-camera" class="primary-button" type="button">Open camera <span aria-hidden="true">↗</span></button>
+              <button id="capture-photo" class="primary-button" type="button" hidden>Take photo <span aria-hidden="true">●</span></button>
+              <label class="secondary-button" for="photo-upload">Upload a photo <span aria-hidden="true">↗</span></label>
+              <input id="photo-upload" type="file" accept="image/*" hidden />
+            </div>
+            <button class="text-button" type="button" data-action="back-rsvp">← Back to RSVP</button>
+          </section>
+
+          <section id="share-step" class="step" aria-labelledby="share-title" hidden>
+            <p class="kicker">READY TO SHARE</p>
+            <h1 id="share-title">See you<br /><em>there.</em></h1>
+            <p class="intro">Your event image is ready. Save it for yourself or share it with your people.</p>
+            <div class="share-actions">
+              <button id="download-image" class="primary-button" type="button">Download image <span aria-hidden="true">↓</span></button>
+              <button id="share-image" class="secondary-button" type="button">Share image <span aria-hidden="true">↗</span></button>
+            </div>
+            <p id="share-feedback" class="feedback" role="status" hidden></p>
+            <button class="text-button" type="button" data-action="change-photo">← Use another photo</button>
+          </section>
+        </section>
+
+        <aside class="preview-column" aria-label="Event image preview">
+          <div class="preview-heading"><span>THE MOMENT, FRAMED.</span><span id="preview-stage">PREVIEW / 01</span></div>
+          <div id="placeholder-frame" class="event-frame" aria-hidden="true">
+            <div class="frame-top"><span>THE<br />GATHERING<span class="star">✳</span></span><span class="frame-edition">A MOMENT<br />TO REMEMBER</span></div>
+            <div class="placeholder-photo"><span class="placeholder-sun"></span><span class="placeholder-person"></span></div>
+            <div class="frame-bottom"><span>GOOD PEOPLE.<br />GREAT MOMENTS.</span><span>SEE YOU<br />THERE ↗</span></div>
+          </div>
+          <canvas id="result-canvas" width="1080" height="1350" aria-label="Your personalized event image" hidden></canvas>
+          <p class="preview-caption" id="preview-caption">Your photo, name and company will appear here.</p>
+        </aside>
+      </main>
+      <footer class="site-footer"><span>THE GATHERING © 2026</span><span>Made for the moments we share.</span></footer>
+    </div>
+  </body>
+</html>
