@@ -168,20 +168,7 @@ function openLinkedInWithDownload() {
   if (!tab) window.location.assign(url);
 }
 
-document.getElementById('share-image').addEventListener('click', async () => {
-  const png = canvas.toDataURL('image/png').split(',')[1];
-  const bytes = Uint8Array.from(atob(png), character => character.charCodeAt(0));
-  const file = new File([bytes], 'the-gathering.png', { type: 'image/png' });
-  if (navigator.share && navigator.canShare?.({ files: [file] })) {
-    try {
-      await navigator.share({ files: [file], title: 'The Gathering' });
-      return;
-    } catch (error) {
-      if (error.name === 'AbortError') return;
-    }
-  }
-  openLinkedInWithDownload();
-});
+document.getElementById('share-image').addEventListener('click', openLinkedInWithDownload);
 
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
   const action = button.dataset.action;
