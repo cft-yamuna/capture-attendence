@@ -160,15 +160,60 @@ function downloadImage() {
 
 document.getElementById('download-image').addEventListener('click', downloadImage);
 
-function openLinkedInWithDownload() {
-  const url = 'https://www.linkedin.com/feed/?shareActive=true';
-  const tab = window.open(url, '_blank');
-  if (tab) tab.opener = null;
-  downloadImage();
-  if (!tab) window.location.assign(url);
+function socialPreview() {
+  const preview = document.createElement('canvas');
+  preview.width = 1200;
+  preview.height = 627;
+  const drawing = preview.getContext('2d');
+  drawing.fillStyle = '#f7f4ee';
+  drawing.fillRect(0, 0, 1200, 627);
+  drawing.fillStyle = '#e85d36';
+  drawing.fillRect(0, 0, 18, 627);
+  drawing.fillStyle = '#24211e';
+  drawing.font = '600 86px Oswald, sans-serif';
+  drawing.fillText("I'M", 60, 140);
+  drawing.fillText('ATTENDING.', 60, 230, 590);
+  drawing.fillStyle = '#e85d36';
+  drawing.fillRect(60, 300, 570, 5);
+  drawing.fillStyle = '#24211e';
+  drawing.font = '600 45px Oswald, sans-serif';
+  drawing.fillText(guest.name.toUpperCase(), 60, 390, 570);
+  drawing.font = '500 29px Oswald, sans-serif';
+  drawing.fillText(guest.company.toUpperCase(), 60, 435, 570);
+  drawing.drawImage(canvas, 720, 32, 448, 560);
+  return preview.toDataURL('image/jpeg', 0.85);
 }
 
-document.getElementById('share-image').addEventListener('click', openLinkedInWithDownload);
+document.getElementById('share-image').addEventListener('click', async event => {
+  const button = event.currentTarget;
+  const feedback = document.getElementById('share-feedback');
+  const tab = window.open('', '_blank');
+  if (tab) {
+    tab.document.body.textContent = 'Preparing your LinkedIn preview…';
+    tab.opener = null;
+  }
+  button.disabled = true;
+  feedback.textContent = 'Preparing your LinkedIn preview…';
+  feedback.hidden = false;
+  try {
+    const response = await fetch('/api/share', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: socialPreview() }),
+    });
+    if (!response.ok) throw new Error('Preview upload failed');
+    const { shareUrl } = await response.json();
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+    if (tab) tab.location.replace(linkedInUrl);
+    else window.location.assign(linkedInUrl);
+    feedback.hidden = true;
+  } catch {
+    if (tab) tab.close();
+    feedback.textContent = 'The LinkedIn preview could not be prepared. Please try again.';
+  } finally {
+    button.disabled = false;
+  }
+});
 
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
   const action = button.dataset.action;
