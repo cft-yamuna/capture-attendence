@@ -9,6 +9,7 @@ const context = canvas.getContext('2d');
 const video = document.getElementById('camera-video');
 let stream = null;
 let guest = { name: '', company: '' };
+let shareFile = null;
 let shareGeneration = 0;
 
 function showStep(name) {
@@ -150,7 +151,15 @@ function createImage(photo) {
   canvas.hidden = false;
   document.getElementById('placeholder-frame').hidden = true;
   document.getElementById('preview-caption').textContent = 'Your personalized event image is ready.';
-  prepareLinkedInPreview();
+  const shareButton = document.getElementById('share-image');
+  const generation = ++shareGeneration;
+  shareButton.disabled = true;
+  shareFile = null;
+  canvas.toBlob(blob => {
+    if (!blob || generation !== shareGeneration) return;
+    shareFile = new File([blob], 'the-gathering.png', { type: 'image/png' });
+    shareButton.disabled = false;
+  }, 'image/png');
 }
 
 function downloadImage() {
@@ -162,60 +171,22 @@ function downloadImage() {
 
 document.getElementById('download-image').addEventListener('click', downloadImage);
 
-function socialPreview() {
-  const preview = document.createElement('canvas');
-  preview.width = 1200;
-  preview.height = 627;
-  const drawing = preview.getContext('2d');
-  drawing.fillStyle = '#f7f4ee';
-  drawing.fillRect(0, 0, 1200, 627);
-  drawing.fillStyle = '#e85d36';
-  drawing.fillRect(0, 0, 18, 627);
-  drawing.fillStyle = '#24211e';
-  drawing.font = '600 86px Oswald, sans-serif';
-  drawing.fillText("I'M", 60, 140);
-  drawing.fillText('ATTENDING.', 60, 230, 590);
-  drawing.fillStyle = '#e85d36';
-  drawing.fillRect(60, 300, 570, 5);
-  drawing.fillStyle = '#24211e';
-  drawing.font = '600 45px Oswald, sans-serif';
-  drawing.fillText(guest.name.toUpperCase(), 60, 390, 570);
-  drawing.font = '500 29px Oswald, sans-serif';
-  drawing.fillText(guest.company.toUpperCase(), 60, 435, 570);
-  drawing.drawImage(canvas, 720, 32, 448, 560);
-  return preview.toDataURL('image/jpeg', 0.85);
-}
-
-async function prepareLinkedInPreview() {
-  const generation = ++shareGeneration;
-  const link = document.getElementById('share-image');
+document.getElementById('share-image').addEventListener('click', async () => {
   const feedback = document.getElementById('share-feedback');
-  link.href = '#';
-  link.setAttribute('aria-disabled', 'true');
-  feedback.textContent = 'Preparing your LinkedIn preview…';
-  feedback.hidden = false;
-  try {
-    const response = await fetch('/api/share', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: socialPreview() }),
-    });
-    if (!response.ok) throw new Error('Preview upload failed');
-    const { shareUrl } = await response.json();
-    if (generation !== shareGeneration) return;
-    link.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
-    link.removeAttribute('aria-disabled');
-    feedback.hidden = true;
-  } catch {
-    if (generation !== shareGeneration) return;
-    feedback.textContent = 'The LinkedIn preview could not be prepared. Tap LinkedIn to retry.';
+  if (!shareFile) return;
+  if (!navigator.canShare?.({ files: [shareFile] })) {
+    feedback.textContent = 'This browser cannot share an image. Download it and add it to a LinkedIn post.';
+    feedback.hidden = false;
+    return;
   }
-}
-
-document.getElementById('share-image').addEventListener('click', event => {
-  if (event.currentTarget.getAttribute('href') !== '#') return;
-  event.preventDefault();
-  if (!document.getElementById('share-feedback').textContent.startsWith('Preparing')) prepareLinkedInPreview();
+  try {
+    await navigator.share({ files: [shareFile] });
+    feedback.hidden = true;
+  } catch (error) {
+    if (error.name === 'AbortError') return;
+    feedback.textContent = 'The image could not be shared. Download it and add it to a LinkedIn post.';
+    feedback.hidden = false;
+  }
 });
 
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {

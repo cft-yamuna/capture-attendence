@@ -3,10 +3,6 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "start": "node server.js",
-    "test": "node --test"
-  },
-  "dependencies": {
-    "@vercel/functions": "^3.11.3"
+    "start": "node server.js"
   }
 }
