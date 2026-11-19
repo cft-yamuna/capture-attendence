@@ -9,8 +9,6 @@ const context = canvas.getContext('2d');
 const video = document.getElementById('camera-video');
 let stream = null;
 let guest = { name: '', company: '' };
-const responseId = sessionStorage.getItem('responseId') || crypto.randomUUID();
-sessionStorage.setItem('responseId', responseId);
 
 function showStep(name) {
   Object.entries(steps).forEach(([key, element]) => { element.hidden = key !== name; });
@@ -25,7 +23,7 @@ function showStep(name) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-document.getElementById('rsvp-form').addEventListener('submit', async event => {
+document.getElementById('rsvp-form').addEventListener('submit', event => {
   event.preventDefault();
   const form = event.currentTarget;
   if (!form.reportValidity()) return;
@@ -34,24 +32,6 @@ document.getElementById('rsvp-form').addEventListener('submit', async event => {
     company: document.getElementById('guest-company').value.trim(),
   };
   if (!guest.name || !guest.company) return;
-  const feedback = document.getElementById('rsvp-feedback');
-  const submit = form.querySelector('button[type="submit"]');
-  feedback.hidden = true;
-  submit.disabled = true;
-  try {
-    const response = await fetch('/api/rsvp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: responseId, ...guest, attendance: new FormData(form).get('attendance') }),
-    });
-    if (!response.ok) throw new Error('Could not save RSVP');
-  } catch {
-    feedback.textContent = 'Your response could not be saved. Please try again.';
-    feedback.hidden = false;
-    submit.disabled = false;
-    return;
-  }
-  submit.disabled = false;
   if (new FormData(form).get('attendance') === 'no') {
     document.getElementById('decline-name').textContent = guest.name;
     showStep('decline');

@@ -25,7 +25,7 @@
           <section id="rsvp-step" class="step" aria-labelledby="rsvp-title">
             <p class="kicker">YOUR INVITATION</p>
             <h1 id="rsvp-title">Make it<br /><em>official.</em></h1>
-            <p class="intro">Tell us who’s coming. If you’re joining us, we’ll make a shareable keepsake with your photo.</p>
+            <p class="intro">Tell us your name, company, and whether you’re joining. If you are, we’ll make a shareable keepsake with your photo.</p>
             <form id="rsvp-form">
               <div class="field-row">
                 <label class="field"><span>Your name</span><input id="guest-name" name="name" type="text" autocomplete="name" maxlength="48" placeholder="e.g. Alex Morgan" required /></label>
@@ -37,14 +37,13 @@
                 <label class="choice"><input type="radio" name="attendance" value="no" /><span class="choice-indicator"></span><span>Sorry, I can’t make it</span><span class="choice-arrow">↗</span></label>
               </fieldset>
               <button class="primary-button" type="submit">Continue <span aria-hidden="true">→</span></button>
-              <p id="rsvp-feedback" class="feedback" role="status" hidden></p>
             </form>
           </section>
 
           <section id="decline-step" class="step" aria-labelledby="decline-title" hidden>
-            <p class="kicker">RSVP RECEIVED</p>
+            <p class="kicker">RESPONSE NOTED</p>
             <h1 id="decline-title">We’ll miss<br /><em>you.</em></h1>
-            <p class="intro">Thanks for letting us know, <span id="decline-name"></span>. We hope to see you next time.</p>
+            <p class="intro">Thanks for stopping by, <span id="decline-name"></span>. We hope to see you next time.</p>
             <button class="text-button" type="button" data-action="start-over">← Change your response</button>
           </section>
 
