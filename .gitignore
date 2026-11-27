@@ -4,3 +4,5 @@ preview-*.png
 share-*.png
 node_modules/
 .vercel/
+dist/
+.env

@@ -3,69 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f7f4ee" />
-    <title>The Gathering — RSVP & share</title>
+    <meta name="theme-color" content="#97144d" />
+    <title>Axis Bank Start-Up Social — RSVP</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=static-artwork" />
-    <script src="script.js?v=static-artwork" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div class="site-shell">
-      <header class="site-header">
-        <a class="brand" href="./" aria-label="The Gathering home"><span class="brand-mark">✳</span> THE GATHERING</a>
-        <span class="header-note">An event worth showing up for.</span>
-      </header>
-
-      <main class="main-grid">
-        <section class="content-column">
-          <div class="step-line" aria-label="Progress"><span id="step-count">01</span><span class="step-rule"></span><span>02</span></div>
-
-          <section id="rsvp-step" class="step" aria-labelledby="rsvp-title">
-            <p class="kicker">YOUR INVITATION</p>
-            <h1 id="rsvp-title">Make it<br /><em>official.</em></h1>
-            <p class="intro">Tell us your name, company, and whether you’re joining. If you are, you’ll get an I Am Attending image to share on LinkedIn.</p>
-            <form id="rsvp-form">
-              <div class="field-row">
-                <label class="field"><span>Your name</span><input id="guest-name" name="name" type="text" autocomplete="name" maxlength="48" placeholder="e.g. Alex Morgan" required /></label>
-                <label class="field"><span>Company</span><input id="guest-company" name="company" type="text" autocomplete="organization" maxlength="48" placeholder="e.g. Studio North" required /></label>
-              </div>
-              <fieldset class="attendance-field">
-                <legend>Will you be attending?</legend>
-                <label class="choice"><input type="radio" name="attendance" value="yes" required /><span class="choice-indicator"></span><span>Yes, I’ll be there</span><span class="choice-arrow">↗</span></label>
-                <label class="choice"><input type="radio" name="attendance" value="no" /><span class="choice-indicator"></span><span>Sorry, I can’t make it</span><span class="choice-arrow">↗</span></label>
-              </fieldset>
-              <button class="primary-button" type="submit">Continue <span aria-hidden="true">→</span></button>
-            </form>
-          </section>
-
-          <section id="decline-step" class="step" aria-labelledby="decline-title" hidden>
-            <p class="kicker">RESPONSE NOTED</p>
-            <h1 id="decline-title">We’ll miss<br /><em>you.</em></h1>
-            <p class="intro">Thanks for stopping by, <span id="decline-name"></span>. We hope to see you next time.</p>
-            <button class="text-button" type="button" data-action="start-over">← Change your response</button>
-          </section>
-
-          <section id="share-step" class="step" aria-labelledby="share-title" hidden>
-            <p class="kicker">READY TO SHARE</p>
-            <h1 id="share-title">See you<br /><em>there.</em></h1>
-            <p class="intro">Download your image and post it. On LinkedIn: tap <strong>Post</strong>, add a photo, and pick the image you just saved.</p>
-            <div class="share-actions">
-              <button id="download-image" class="primary-button" type="button">Download image <span aria-hidden="true">↓</span></button>
-              <button id="share-image" class="secondary-button" type="button">LinkedIn <span aria-hidden="true">↗</span></button>
-            </div>
-            <button class="text-button" type="button" data-action="start-over">← Change your response</button>
-          </section>
-        </section>
-
-        <aside class="preview-column" aria-label="Event image preview">
-          <div class="preview-heading"><span>THE MOMENT, FRAMED.</span><span id="preview-stage">PREVIEW / 01</span></div>
-          <img class="artwork" src="public/artwork.png" width="800" height="800" alt="I Am Attending — Start-Up Social by Axis Bank" />
-          <p class="preview-caption">Everyone attending shares this image.</p>
-        </aside>
-      </main>
-      <footer class="site-footer"><span>THE GATHERING © 2026</span><span>Made for the moments we share.</span></footer>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
