@@ -21,12 +21,20 @@ img { display: block; max-width: 100%; height: auto; }
 .container { width: 100%; max-width: 1920px; margin: 0 auto; padding: 0 var(--gutter); }
 
 /* Header: burgundy bar with the white notch top-right */
-.site-header { position: relative; background: var(--brand); height: clamp(64px, 6.8vw, 130px); overflow: hidden; }
+/* No burgundy is painted behind the white tab: the background stops where the notch SVG starts
+   (the SVG is 2× the bar's height wide; the extra 4px overlaps its solid-burgundy left edge), and the
+   SVG draws the burgundy around the tab. The tab is the white page showing through, so a fractional
+   bar height can't blend burgundy into a hairline under it. */
+.site-header {
+  --header-h: clamp(64px, 6.8vw, 130px);
+  position: relative;
+  height: var(--header-h);
+  overflow: hidden;
+  background: linear-gradient(var(--brand), var(--brand)) left top / calc(100% - 2 * var(--header-h) + 4px) 100% no-repeat;
+}
 .header-inner { height: 100%; display: flex; align-items: center; }
 .brand img { width: clamp(128px, 12.6vw, 244px); }
-/* The path's white fill runs past the viewBox bottom (overflow: visible, then clipped by the header)
-   so no burgundy hairline shows under the tab, while the curve itself still ends exactly at the bar's edge */
-.header-notch { position: absolute; top: 0; right: -1px; height: 100%; width: auto; overflow: visible; }
+.header-notch { position: absolute; top: 0; right: -1px; height: 100%; width: auto; fill: var(--brand); }
 
 /* Two-column layout on desktop: frame left, copy right */
 .layout {
