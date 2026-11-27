@@ -98,7 +98,7 @@ function ShareStep() {
     <section className="step" aria-labelledby="share-title">
       <p className="kicker">You’re invited</p>
       <Heading id="share-title" light="Spread the" bold="Word." />
-      <p className="intro">Download your frame and post it. On LinkedIn: tap <strong>Post</strong>, add a photo, and pick the image you just saved.</p>
+      <p className="intro">Download your frame and post it. LinkedIn opens a new post for you: add a photo and pick the image you just saved.</p>
       <div className="actions">
         <button className="btn btn-primary" type="button" onClick={() => run(shareOnLinkedIn)}>LinkedIn</button>
         <button className="btn btn-secondary" type="button" onClick={() => run(downloadImage)}>Download frame</button>
@@ -150,7 +150,7 @@ export default function App() {
           </a>
         </div>
         <svg className="header-notch" viewBox="0 0 260 130" preserveAspectRatio="xMaxYMin meet" aria-hidden="true">
-          <path d="M0 0H260V32H146c-12 0-21 5-28 14L66 116c-7 9-15 14-28 14H0z" />
+          <path d="M-10000 0H260V32H146c-12 0-21 5-28 14L66 116c-7 9-15 14-28 14H-10000z" />
         </svg>
       </header>
 

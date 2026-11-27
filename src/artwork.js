@@ -1,6 +1,7 @@
 export const ARTWORK_URL = '/artwork.png';
 const ARTWORK_FILE = 'i-am-attending.png';
-const LINKEDIN_URL = 'https://www.linkedin.com/feed/';
+// shareActive=true opens the feed with the "Start a post" composer already open.
+const LINKEDIN_URL = 'https://www.linkedin.com/feed/?shareActive=true';
 
 let artworkBlob = null;
 
@@ -22,7 +23,7 @@ export async function downloadImage() {
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
-// Download the frame and open LinkedIn; the guest then starts a post and adds the saved image.
+// Download the frame and open LinkedIn's post composer; the guest then adds the saved image.
 // Resolves once the download has started, or rejects if the artwork could not be fetched.
 export function shareOnLinkedIn() {
   const downloaded = downloadImage();
