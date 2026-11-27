@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ARTWORK_URL, downloadImage, preloadArtwork, shareOnLinkedIn } from './artwork.js';
+import { ARTWORK_URL, downloadImage, shareOnLinkedIn } from './artwork.js';
 import { saveRsvp } from './supabase.js';
 
 const INVITE_URL = '/invite.png';
@@ -83,22 +83,12 @@ function ConfirmedStep({ name, onContinue, onBack }) {
 }
 
 function ShareStep() {
-  const [ready, setReady] = useState(false);
   const [notice, setNotice] = useState('');
 
-  useEffect(() => {
-    let active = true;
-    preloadArtwork()
-      .catch(() => {}) // the buttons retry the request on click
-      .finally(() => active && setReady(true));
-    return () => { active = false; };
-  }, []);
-
-  async function handleLinkedIn() {
+  async function run(action) {
     setNotice('');
     try {
-      const outcome = await shareOnLinkedIn();
-      if (outcome === 'downloaded') setNotice('Your frame was saved. In LinkedIn, tap Start a post, then add the image.');
+      await action();
     } catch {
       setNotice('The frame could not be loaded. Check your connection and try again.');
     }
@@ -108,10 +98,10 @@ function ShareStep() {
     <section className="step" aria-labelledby="share-title">
       <p className="kicker">You’re invited</p>
       <Heading id="share-title" light="Spread the" bold="Word." />
-      <p className="intro">Tap LinkedIn and choose LinkedIn from the share menu. Your frame is attached to a new post, ready to publish.</p>
+      <p className="intro">Download your frame and post it. On LinkedIn: tap <strong>Post</strong>, add a photo, and pick the image you just saved.</p>
       <div className="actions">
-        <button className="btn btn-primary" type="button" onClick={handleLinkedIn} disabled={!ready}>LinkedIn</button>
-        <button className="btn btn-secondary" type="button" onClick={downloadImage}>Download frame</button>
+        <button className="btn btn-primary" type="button" onClick={() => run(shareOnLinkedIn)}>LinkedIn</button>
+        <button className="btn btn-secondary" type="button" onClick={() => run(downloadImage)}>Download frame</button>
       </div>
       {notice && <p className="intro" role="status">{notice}</p>}
     </section>
