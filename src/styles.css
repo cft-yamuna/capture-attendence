@@ -24,7 +24,8 @@ img { display: block; max-width: 100%; height: auto; }
 .site-header { position: relative; background: var(--brand); height: clamp(64px, 6.8vw, 130px); overflow: hidden; }
 .header-inner { height: 100%; display: flex; align-items: center; }
 .brand img { width: clamp(128px, 12.6vw, 244px); }
-.header-notch { position: absolute; top: 0; right: -1px; height: 100%; width: auto; }
+/* 2px taller than the bar (clipped by overflow) so no burgundy hairline shows under the white tab */
+.header-notch { position: absolute; top: 0; right: -1px; height: calc(100% + 2px); width: auto; }
 
 /* Two-column layout on desktop: frame left, copy right */
 .layout {
@@ -97,7 +98,6 @@ img { display: block; max-width: 100%; height: auto; }
   .layout { grid-template-columns: minmax(0, 1fr); row-gap: 36px; align-items: start; min-height: 0; padding-top: 22px; }
   .frame { width: 100%; max-width: 560px; margin: 0 auto; }
   .content { max-width: 560px; margin: 0 auto; }
-  .header-notch { height: 100%; }
 }
 
 @media (max-width: 480px) {
