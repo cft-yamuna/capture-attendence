@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="script.js?v=linkedin-web-image" defer></script>
+    <link rel="stylesheet" href="styles.css?v=static-artwork" />
+    <script src="script.js?v=static-artwork" defer></script>
   </head>
   <body>
     <div class="site-shell">
@@ -20,12 +20,12 @@
 
       <main class="main-grid">
         <section class="content-column">
-          <div class="step-line" aria-label="Progress"><span id="step-count">01</span><span class="step-rule"></span><span>03</span></div>
+          <div class="step-line" aria-label="Progress"><span id="step-count">01</span><span class="step-rule"></span><span>02</span></div>
 
           <section id="rsvp-step" class="step" aria-labelledby="rsvp-title">
             <p class="kicker">YOUR INVITATION</p>
             <h1 id="rsvp-title">Make it<br /><em>official.</em></h1>
-            <p class="intro">Tell us your name, company, and whether you’re joining. If you are, we’ll make a shareable keepsake with your photo.</p>
+            <p class="intro">Tell us your name, company, and whether you’re joining. If you are, you’ll get an I Am Attending image to share on LinkedIn.</p>
             <form id="rsvp-form">
               <div class="field-row">
                 <label class="field"><span>Your name</span><input id="guest-name" name="name" type="text" autocomplete="name" maxlength="48" placeholder="e.g. Alex Morgan" required /></label>
@@ -47,45 +47,22 @@
             <button class="text-button" type="button" data-action="start-over">← Change your response</button>
           </section>
 
-          <section id="photo-step" class="step" aria-labelledby="photo-title" hidden>
-            <p class="kicker">STEP TWO — YOUR PHOTO</p>
-            <h1 id="photo-title">Your best<br /><em>side.</em></h1>
-            <p class="intro">Take a selfie or choose a photo from your device. Your image stays in your browser.</p>
-            <div class="camera-box" id="camera-box">
-              <video id="camera-video" autoplay playsinline muted hidden></video>
-              <div id="camera-placeholder" class="camera-placeholder"><span class="camera-symbol" aria-hidden="true">▣</span><span>Camera preview will appear here</span></div>
-            </div>
-            <p id="camera-error" class="feedback" role="status" hidden></p>
-            <div class="photo-actions">
-              <button id="open-camera" class="primary-button" type="button">Open camera <span aria-hidden="true">↗</span></button>
-              <button id="capture-photo" class="primary-button" type="button" hidden>Take photo <span aria-hidden="true">●</span></button>
-              <label class="secondary-button" for="photo-upload">Upload a photo <span aria-hidden="true">↗</span></label>
-              <input id="photo-upload" type="file" accept="image/*" hidden />
-            </div>
-            <button class="text-button" type="button" data-action="back-rsvp">← Back to RSVP</button>
-          </section>
-
           <section id="share-step" class="step" aria-labelledby="share-title" hidden>
             <p class="kicker">READY TO SHARE</p>
             <h1 id="share-title">See you<br /><em>there.</em></h1>
-            <p class="intro">Tap LinkedIn to save your image and open LinkedIn in Chrome. Tap Post, choose Photo, and select the downloaded image. Your post will contain the image, with no link.</p>
+            <p class="intro">Download your image and post it. On LinkedIn: tap <strong>Post</strong>, add a photo, and pick the image you just saved.</p>
             <div class="share-actions">
               <button id="download-image" class="primary-button" type="button">Download image <span aria-hidden="true">↓</span></button>
               <button id="share-image" class="secondary-button" type="button">LinkedIn <span aria-hidden="true">↗</span></button>
             </div>
-            <button class="text-button" type="button" data-action="change-photo">← Use another photo</button>
+            <button class="text-button" type="button" data-action="start-over">← Change your response</button>
           </section>
         </section>
 
         <aside class="preview-column" aria-label="Event image preview">
           <div class="preview-heading"><span>THE MOMENT, FRAMED.</span><span id="preview-stage">PREVIEW / 01</span></div>
-          <div id="placeholder-frame" class="event-frame" aria-hidden="true">
-            <div class="frame-top"><span>THE<br />GATHERING<span class="star">✳</span></span><span class="frame-edition">A MOMENT<br />TO REMEMBER</span></div>
-            <div class="placeholder-photo"><span class="placeholder-sun"></span><span class="placeholder-person"></span></div>
-            <div class="frame-bottom"><span>GOOD PEOPLE.<br />GREAT MOMENTS.</span><span>SEE YOU<br />THERE ↗</span></div>
-          </div>
-          <canvas id="result-canvas" width="1080" height="1350" aria-label="Your personalized event image" hidden></canvas>
-          <p class="preview-caption" id="preview-caption">Your photo, name and company will appear here.</p>
+          <img class="artwork" src="public/artwork.png" width="800" height="800" alt="I Am Attending — Start-Up Social by Axis Bank" />
+          <p class="preview-caption">Everyone attending shares this image.</p>
         </aside>
       </main>
       <footer class="site-footer"><span>THE GATHERING © 2026</span><span>Made for the moments we share.</span></footer>

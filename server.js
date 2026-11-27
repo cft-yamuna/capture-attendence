@@ -8,6 +8,7 @@ const assets = {
   '/': ['index.html', 'text/html; charset=utf-8'],
   '/styles.css': ['styles.css', 'text/css; charset=utf-8'],
   '/script.js': ['script.js', 'text/javascript; charset=utf-8'],
+  '/public/artwork.png': ['public/artwork.png', 'image/png'],
 };
 
 const server = http.createServer((request, response) => {
