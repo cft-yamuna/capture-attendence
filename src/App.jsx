@@ -98,7 +98,7 @@ function ShareStep() {
     <section className="step" aria-labelledby="share-title">
       <p className="kicker">You’re invited</p>
       <Heading id="share-title" light="Spread the" bold="Word." />
-      <p className="intro">Download your frame and post it. LinkedIn opens a new post for you: add a photo and pick the image you just saved.</p>
+      <p className="intro">Download your frame and share it on LinkedIn to let your network know you are attending!</p>
       <div className="actions">
         <button className="btn btn-primary" type="button" onClick={() => run(shareOnLinkedIn)}>LinkedIn</button>
         <button className="btn btn-secondary" type="button" onClick={() => run(downloadImage)}>Download frame</button>
