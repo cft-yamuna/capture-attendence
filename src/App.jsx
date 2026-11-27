@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ARTWORK_URL, downloadImage, shareOnLinkedIn } from './artwork.js';
+import { ARTWORK_URL, downloadImage, preloadArtwork, shareOnLinkedIn } from './artwork.js';
 import { saveRsvp } from './supabase.js';
 
 const INVITE_URL = '/invite.png';
@@ -44,11 +44,11 @@ function RsvpStep({ guest, onSubmit }) {
       <form onSubmit={handleSubmit}>
         <label className="field">
           <span>Full name</span>
-          <input name="name" type="text" autoComplete="name" maxLength={48} placeholder="Sanket" required value={form.name} onChange={update('name')} />
+          <input name="name" type="text" autoComplete="name" maxLength={48} placeholder="Your name" required value={form.name} onChange={update('name')} />
         </label>
         <label className="field">
           <span>Company</span>
-          <input name="company" type="text" autoComplete="organization" maxLength={48} placeholder="SP Design" required value={form.company} onChange={update('company')} />
+          <input name="company" type="text" autoComplete="organization" maxLength={48} placeholder="Your company" required value={form.company} onChange={update('company')} />
         </label>
         <fieldset className="attendance">
           <legend>Will you attend?</legend>
@@ -83,15 +83,37 @@ function ConfirmedStep({ name, onContinue, onBack }) {
 }
 
 function ShareStep() {
+  const [ready, setReady] = useState(false);
+  const [notice, setNotice] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    preloadArtwork()
+      .catch(() => {}) // the buttons retry the request on click
+      .finally(() => active && setReady(true));
+    return () => { active = false; };
+  }, []);
+
+  async function handleLinkedIn() {
+    setNotice('');
+    try {
+      const outcome = await shareOnLinkedIn();
+      if (outcome === 'downloaded') setNotice('Your frame was saved. In LinkedIn, tap Start a post, then add the image.');
+    } catch {
+      setNotice('The frame could not be loaded. Check your connection and try again.');
+    }
+  }
+
   return (
     <section className="step" aria-labelledby="share-title">
       <p className="kicker">You’re invited</p>
       <Heading id="share-title" light="Spread the" bold="Word." />
-      <p className="intro">Download your frame and post it. On LinkedIn: tap Post, add a photo, and pick the image you just saved.</p>
+      <p className="intro">Tap LinkedIn and choose LinkedIn from the share menu. Your frame is attached to a new post, ready to publish.</p>
       <div className="actions">
-        <button className="btn btn-primary" type="button" onClick={downloadImage}>Download frame</button>
-        <button className="btn btn-secondary" type="button" onClick={shareOnLinkedIn}>LinkedIn</button>
+        <button className="btn btn-primary" type="button" onClick={handleLinkedIn} disabled={!ready}>LinkedIn</button>
+        <button className="btn btn-secondary" type="button" onClick={downloadImage}>Download frame</button>
       </div>
+      {notice && <p className="intro" role="status">{notice}</p>}
     </section>
   );
 }
