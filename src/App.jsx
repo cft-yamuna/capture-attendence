@@ -150,7 +150,7 @@ export default function App() {
           </a>
         </div>
         <svg className="header-notch" viewBox="0 0 260 130" preserveAspectRatio="xMaxYMin meet" aria-hidden="true">
-          <path d="M260 32H146c-12 0-21 5-28 14L66 116c-7 9-15 14-28 14h222z" fill="#fff" />
+          <path d="M260 32H146c-12 0-21 5-28 14L66 116c-7 9-15 14-28 14V140H260z" fill="#fff" />
         </svg>
       </header>
 

@@ -24,8 +24,9 @@ img { display: block; max-width: 100%; height: auto; }
 .site-header { position: relative; background: var(--brand); height: clamp(64px, 6.8vw, 130px); overflow: hidden; }
 .header-inner { height: 100%; display: flex; align-items: center; }
 .brand img { width: clamp(128px, 12.6vw, 244px); }
-/* 2px taller than the bar (clipped by overflow) so no burgundy hairline shows under the white tab */
-.header-notch { position: absolute; top: 0; right: -1px; height: calc(100% + 2px); width: auto; }
+/* The path's white fill runs past the viewBox bottom (overflow: visible, then clipped by the header)
+   so no burgundy hairline shows under the tab, while the curve itself still ends exactly at the bar's edge */
+.header-notch { position: absolute; top: 0; right: -1px; height: 100%; width: auto; overflow: visible; }
 
 /* Two-column layout on desktop: frame left, copy right */
 .layout {
